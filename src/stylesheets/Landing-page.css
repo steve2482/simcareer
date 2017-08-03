@@ -1,0 +1,17 @@
+.landing-background {
+  background-size: 100%;
+  text-align: center;
+  height: 950px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.landing-desc {
+  padding-top: 100px;
+}
+
+#landing-header {
+  font-size: 50px;
+}
+
+
