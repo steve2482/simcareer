@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Table } from 'react-bootstrap';
 
-import '../stylesheets/About.css';
+import '../../stylesheets/About.css';
 
 export default function About() {
   return (

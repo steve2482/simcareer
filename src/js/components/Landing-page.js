@@ -1,14 +1,15 @@
 import React from 'react';
 import { ListGroupItem } from 'react-bootstrap';
 
-import '../stylesheets/Landing-page.css'
-import BackgroundImage from '../assets/images/finish-line.jpg';
+import '../../stylesheets/Landing-page.css'
+
+// Import background image
+import BackgroundImage from '../../assets/images/finish-line.jpg';
+const backgroundStyle = {
+  backgroundImage: `url(${BackgroundImage})`
+}
 
 export default function LandingPage() {
-  const backgroundStyle = {
-    backgroundImage: `url(${BackgroundImage})`
-  }
-
   return (
     <div className='landing-background' style={backgroundStyle}>
       <div className='landing-desc'>
