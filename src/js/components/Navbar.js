@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, FormControl, FormGroup, Glyphicon, MenuItem, Modal, Navbar, Nav, NavItem, OverlayTrigger } from 'react-bootstrap';
+import { Button, FormControl, FormGroup, Glyphicon, MenuItem, Modal, Navbar, Nav, NavItem, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions.js';
 
@@ -25,7 +25,9 @@ export class Navigation extends React.Component {
   }
 
   render() {
-    console.log(this.props);
+    const memberIdTooltip = (
+      <Tooltip id='tooltip'>Your Iracing member id is used to gather your race results only. In no way can we access your Iracing account info.</Tooltip>);
+
     return (
       <div>
         {/*Navbar*/}
@@ -55,10 +57,10 @@ export class Navigation extends React.Component {
           <Modal.Body>
             <form>
               <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Email Address" />
+                <FormControl type="text" placeholder="Email Address" required />
               </FormGroup>
               <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Password" />
+                <FormControl type="text" placeholder="Password" required />
               </FormGroup>
               <a href='#'>Forgot Password</a>
             </form>
@@ -75,22 +77,24 @@ export class Navigation extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="First Name" />
+                <FormControl type="text" placeholder="First Name" required />
             </FormGroup>
             <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Last Name" />
+                <FormControl type="text" placeholder="Last Name" required />
             </FormGroup>
             <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Email Address" />
+                <FormControl type="text" placeholder="Email Address" required />
+            </FormGroup>
+            <OverlayTrigger placement='right' overlay={memberIdTooltip}><Glyphicon glyph='question-sign' />
+            </OverlayTrigger>
+            <FormGroup controlId="formBasicText">
+                <FormControl type="text" placeholder="Iracing Member ID" required />
             </FormGroup>
             <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Iracing Member ID" />
+                <FormControl type="text" placeholder="Password" required />
             </FormGroup>
             <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Password" />
-            </FormGroup>
-            <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Confirm Password" />
+                <FormControl type="text" placeholder="Confirm Password" required />
             </FormGroup>
           </Modal.Body>
           <Modal.Footer>

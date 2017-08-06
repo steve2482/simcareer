@@ -10,7 +10,7 @@ export default function About() {
       <h4>Description</h4>
       <p className='indent'>SimCareer is a web based application where <a href='iracing.com'>iRacing</a> members can progress through a racing career following a path chosen by them along with the typical real life path. SimCareer will update your career race results automatically and notify you of your progress and when your career needs attention.</p>
       <h4>How it Works</h4>
-      <p className='indent'>SimCareer is a 'single player' career mode, however iRacing is exclusively multiplayer. So how does SimCareer act as a single player career. The application will take your race results and will rank your competitors via Irating, and change thier names to something a bit more fun. Then points will be assigned based on finishing order.</p>
+      <p className='indent'>SimCareer is a 'single player' career mode, however iRacing is exclusively multiplayer. So how does SimCareer act as a single player career? The application will take your race results and will rank your competitors via Irating, and change thier names to something a bit more fun. Then points will be assigned based on finishing order.</p>
       <div className='results-example'>
         <Col md={6}>
           <p className='indent'>Example Result:</p>
