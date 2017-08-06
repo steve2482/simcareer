@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Glyphicon, MenuItem, Modal, Navbar, Nav, NavItem, OverlayTrigger } from 'react-bootstrap';
+import { Button, FormControl, FormGroup, Glyphicon, MenuItem, Modal, Navbar, Nav, NavItem, OverlayTrigger } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions.js';
 
@@ -53,51 +53,48 @@ export class Navigation extends React.Component {
             <Modal.Title>Login</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <h4>Text in a modal</h4>
-            <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
-
-            <hr />
-
-            <h4>Overflowing text to show scroll behavior</h4>
-            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+            <form>
+              <FormGroup controlId="formBasicText">
+                <FormControl type="text" placeholder="Email Address" />
+              </FormGroup>
+              <FormGroup controlId="formBasicText">
+                <FormControl type="text" placeholder="Password" />
+              </FormGroup>
+              <a href='#'>Forgot Password</a>
+            </form>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={this.toggleLoginModal}>Close</Button>
+            <Button>Login</Button>
           </Modal.Footer>
         </Modal>
 
       {/*Register Modal*/}
         <Modal show={this.props.state.showRegister} onHide={this.toggleRegisterModal}>
           <Modal.Header closeButton>
-            <Modal.Title>Login</Modal.Title>
+            <Modal.Title>Register</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <h4>Text in a modal</h4>
-            <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
-
-            <hr />
-
-            <h4>Overflowing text to show scroll behavior</h4>
-            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+            <FormGroup controlId="formBasicText">
+                <FormControl type="text" placeholder="First Name" />
+            </FormGroup>
+            <FormGroup controlId="formBasicText">
+                <FormControl type="text" placeholder="Last Name" />
+            </FormGroup>
+            <FormGroup controlId="formBasicText">
+                <FormControl type="text" placeholder="Email Address" />
+            </FormGroup>
+            <FormGroup controlId="formBasicText">
+                <FormControl type="text" placeholder="Iracing Member ID" />
+            </FormGroup>
+            <FormGroup controlId="formBasicText">
+                <FormControl type="text" placeholder="Password" />
+            </FormGroup>
+            <FormGroup controlId="formBasicText">
+                <FormControl type="text" placeholder="Confirm Password" />
+            </FormGroup>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={this.toggleRegisterModal}>Close</Button>
+            <Button>Register</Button>
           </Modal.Footer>
         </Modal>
       </div>
