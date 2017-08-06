@@ -4,7 +4,9 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "express": "^4.15.3",
     "immutability-helper": "^2.3.0",
+    "morgan": "^1.8.2",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.2",
     "react-dom": "^15.6.1",
@@ -16,6 +18,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:server": "node server",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
