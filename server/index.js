@@ -1,8 +1,7 @@
 'use strict';
 
 const app = require('./app');
-
-const PORT = process.env.PORT || 9000;
+const { DATABASE_URL, PORT } = require('./config.js');
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
