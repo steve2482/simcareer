@@ -3,10 +3,9 @@ const bcrypt = require('bcryptjs');
 
 // User Schema
 const UserSchema = mongoose.Schema({
-  firstName: String,
-  lastName: String,
+  name: String,
   email: String,
-  iracingMemberId: Number,
+  memberId: Number,
   password: String,
 });
 

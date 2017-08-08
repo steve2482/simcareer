@@ -12,6 +12,8 @@ export class Navigation extends React.Component {
     super(props);
     this.toggleLoginModal = this.toggleLoginModal.bind(this);
     this.toggleRegisterModal = this.toggleRegisterModal.bind(this);
+    this.registerUser = this.registerUser.bind(this);
+    this.validatePassword = this.validatePassword.bind(this);
   }
 
   toggleLoginModal() {
@@ -24,9 +26,41 @@ export class Navigation extends React.Component {
       actions.toggleRegisterModal());
   }
 
+  registerUser(e) {
+    e.preventDefault();
+    const newUser = {
+      name: this.firstName.value + ' ' + this.lastName.value,
+      email: this.email.value,
+      memberId: this.memberId.value,
+      password: this.password.value,
+      password2: this.password2.value
+    };
+    this.props.dispatch(
+      actions.registerNewUser(newUser, this.props.history))
+    this.props.dispatch(
+      actions.toggleRegisterModal());
+  }
+
+  validatePassword() {
+    let password = this.password.value;
+    let password2 = this.password2.value;
+    let boolean = (password === password2)
+    this.props.dispatch(
+      actions.setValidPassword(boolean));
+  }
+
   render() {
+    // Tooltip for memberId field
     const memberIdTooltip = (
       <Tooltip id='tooltip'>Your Iracing member id is used to gather your race results only. In no way can we access your Iracing account info.</Tooltip>);
+    
+    // If registration passwords do not match show error message
+    let passwordErrorMsg;
+    if (!this.props.state.isValidPassword) {
+      passwordErrorMsg = (
+        <p className='alert alert-danger'>Passwords must match</p>
+      );
+    }
 
     return (
       <div>
@@ -57,10 +91,10 @@ export class Navigation extends React.Component {
           <Modal.Body>
             <form>
               <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Email Address" required />
+                <FormControl type="email" placeholder="Email Address" required />
               </FormGroup>
               <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Password" required />
+                <FormControl type="password" placeholder="Password" required />
               </FormGroup>
               <a href='#'>Forgot Password</a>
             </form>
@@ -76,30 +110,31 @@ export class Navigation extends React.Component {
             <Modal.Title>Register</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="First Name" required />
-            </FormGroup>
-            <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Last Name" required />
-            </FormGroup>
-            <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Email Address" required />
-            </FormGroup>
-            <OverlayTrigger placement='right' overlay={memberIdTooltip}><Glyphicon glyph='question-sign' />
-            </OverlayTrigger>
-            <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Iracing Member ID" required />
-            </FormGroup>
-            <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Password" required />
-            </FormGroup>
-            <FormGroup controlId="formBasicText">
-                <FormControl type="text" placeholder="Confirm Password" required />
-            </FormGroup>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button>Register</Button>
-          </Modal.Footer>
+            <form onSubmit={this.registerUser}>
+              <FormGroup controlId="formBasicText">
+                <FormControl type="text" inputRef={input => this.firstName = input} placeholder="First Name" required />
+              </FormGroup>
+              <FormGroup controlId="formBasicText">
+                <FormControl type="text" inputRef={input => this.lastName = input} placeholder="Last Name" required />
+              </FormGroup>
+              <FormGroup controlId="formBasicText">
+                <FormControl type="email" inputRef={input => this.email = input} placeholder="Email Address" required />
+              </FormGroup>
+              <OverlayTrigger placement='right' overlay={memberIdTooltip}><Glyphicon glyph='question-sign' />
+              </OverlayTrigger>
+              <FormGroup controlId="formBasicText">
+                <FormControl type="number" inputRef={input => this.memberId = input} placeholder="Iracing Member ID" required />
+              </FormGroup>
+              <FormGroup controlId="formBasicText">
+                <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
+              </FormGroup>
+              <FormGroup controlId="formBasicText">
+                <FormControl type="password" inputRef={input => this.password2 = input} placeholder="Confirm Password" required onChange={this.validatePassword}/>
+              </FormGroup>
+              {passwordErrorMsg}
+              <Button type='submit' disabled={!this.props.state.isValidPassword}>Submit</Button>
+            </form>
+          </Modal.Body>          
         </Modal>
       </div>
     );

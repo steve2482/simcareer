@@ -7,6 +7,8 @@
     "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",
     "express": "^4.15.3",
+    "express-session": "^1.15.5",
+    "express-validator": "^3.2.1",
     "immutability-helper": "^2.3.0",
     "mongoose": "^4.11.5",
     "morgan": "^1.8.2",
@@ -27,5 +29,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "dotenv": "^4.0.0"
   }
 }

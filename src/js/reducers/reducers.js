@@ -3,7 +3,10 @@ import update from 'immutability-helper';
 
 const appState = {
   showLogin: false,
-  showRegister: false
+  showRegister: false,
+  errors: null,
+  isValidPassword: true,
+  user: null
 };
 
 export const simCareerReducer = (state=appState, action) => {
@@ -13,10 +16,29 @@ export const simCareerReducer = (state=appState, action) => {
     const newAppState = update(state, {showLogin: {$set: !showLogin}});
     return newAppState;
   }
+
   // Toggle Register Modal
   if (action.type === actions.TOGGLE_REGISTER_MODAL) {
     let showRegister = state.showRegister;
     const newAppState = update(state, {showRegister: {$set: !showRegister}});
+    return newAppState;
+  }
+
+  // Set Errors
+  if (action.type === actions.SET_ERRORS) {
+    const newAppState = update(state, {errors: {$set: action.errors}});
+    return newAppState;
+  }
+
+  // Set Valid Password
+  if (action.type === actions.SET_VALID_PASSWORD) {
+    const newAppState = update(state, {isValidPassword: {$set: action.boolean}});
+    return newAppState;
+  }
+
+  // Enter User State
+  if (action.type === actions.ENTER_USER_STATE) {
+    const newAppState = update(state, {user: {$set: action.user}});
     return newAppState;
   }
   return state;
