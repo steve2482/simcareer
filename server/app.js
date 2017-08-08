@@ -66,36 +66,47 @@ app.post('/register', (req, res) => {
   let memberId = req.body.memberId;
   let password = req.body.password;
   let password2 = req.body.password2;
+  let newUser = new User({
+    name: name,
+    email: email,
+    memberId: memberId,
+    password: password,
+  });
 
-  // Validation======================================================
-  // ================================================================
-  
-
-  
+  User.createUser(newUser, function(err, user) {          
+    if (err) {
+      throw err;
+    } else {
+      res.status(200).json(user);
+    }          
+  });
     
+          
+});
+
+// MemberId Validation During Registration
+app.post('/validate-memberId', (req, res) => {
+  let memberId = req.body.memberId;
+  let idIsValid;
+
   User.find({memberId: memberId})
   .then(user => {
     if (user.length > 0) {
-      const message = [{msg: 'There is already an account with using that memberId. If problem persists, contact support.'}];
-      res.status(400).json(message);
+      idIsValid = false;
+      const message = 'There is already an account with using that memberId. If problem persists, contact support.';
+      const status = {
+        idIsValid: idIsValid,
+        message: message
+      }
+      res.status(200).json(status);
+    } else {
+      idIsValid = true;
+      const status = {
+        idIsValid: idIsValid
+      }
+      res.status(200).json(status)
     }
-    else {
-      console.log('creating user');
-      let newUser = new User({
-        name: name,
-        email: email,
-        memberId: memberId,
-        password: password,
-      });
-      User.createUser(newUser, function(err, user) {          
-        if (err) {
-          throw err;
-        } else {
-          res.status(200).json(user);
-        }          
-      });
-    }
-  });         
+  });
 });
 
 module.exports = app;

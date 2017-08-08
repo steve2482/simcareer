@@ -6,7 +6,8 @@ const appState = {
   showRegister: false,
   errors: null,
   isValidPassword: true,
-  user: null
+  user: null,
+  idIsValid: true
 };
 
 export const simCareerReducer = (state=appState, action) => {
@@ -24,6 +25,18 @@ export const simCareerReducer = (state=appState, action) => {
     return newAppState;
   }
 
+  // Enter User State
+  if (action.type === actions.ENTER_USER_STATE) {
+    const newAppState = update(state, {user: {$set: action.user}});
+    return newAppState;
+  }
+
+  // Set Id Is Valid
+  if (action.type === actions.ID_IS_VALID) {
+    const newAppState = update(state, {idIsValid: {$set: action.boolean}});
+    return newAppState;
+  }
+
   // Set Errors
   if (action.type === actions.SET_ERRORS) {
     const newAppState = update(state, {errors: {$set: action.errors}});
@@ -36,10 +49,5 @@ export const simCareerReducer = (state=appState, action) => {
     return newAppState;
   }
 
-  // Enter User State
-  if (action.type === actions.ENTER_USER_STATE) {
-    const newAppState = update(state, {user: {$set: action.user}});
-    return newAppState;
-  }
   return state;
 }

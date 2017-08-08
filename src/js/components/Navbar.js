@@ -1,10 +1,13 @@
 import React from 'react';
-import { Button, FormControl, FormGroup, Glyphicon, MenuItem, Modal, Navbar, Nav, NavItem, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions.js';
 
+// Imported Components
 import { Link } from 'react-router-dom';
+import { Button, FormControl, FormGroup, Glyphicon, MenuItem, Modal, Navbar, Nav, NavItem, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import ErrorMessage from './Error-message.js';
 
+// Stylesheet
 import '../../stylesheets/Navbar.css';
 
 export class Navigation extends React.Component {
@@ -14,6 +17,7 @@ export class Navigation extends React.Component {
     this.toggleRegisterModal = this.toggleRegisterModal.bind(this);
     this.registerUser = this.registerUser.bind(this);
     this.validatePassword = this.validatePassword.bind(this);
+    this.validateNewMemberId = this.validateNewMemberId.bind(this);
   }
 
   toggleLoginModal() {
@@ -36,9 +40,17 @@ export class Navigation extends React.Component {
       password2: this.password2.value
     };
     this.props.dispatch(
-      actions.registerNewUser(newUser, this.props.history))
+      actions.registerNewUser(newUser, this.props.history));
     this.props.dispatch(
       actions.toggleRegisterModal());
+  }
+
+  validateNewMemberId() {
+    let memberId = {
+      memberId: this.memberId.value
+    };
+    this.props.dispatch(
+      actions.validateNewMemberId(memberId));
   }
 
   validatePassword() {
@@ -58,7 +70,14 @@ export class Navigation extends React.Component {
     let passwordErrorMsg;
     if (!this.props.state.isValidPassword) {
       passwordErrorMsg = (
-        <p className='alert alert-danger'>Passwords must match</p>
+        <ErrorMessage message='Passwords must match' />
+      );
+    }
+
+    let memberIdErrorMsg;
+    if (!this.props.state.idIsValid) {
+      memberIdErrorMsg = (
+        <ErrorMessage message={this.props.state.errors} />
       );
     }
 
@@ -123,7 +142,7 @@ export class Navigation extends React.Component {
               <OverlayTrigger placement='right' overlay={memberIdTooltip}><Glyphicon glyph='question-sign' />
               </OverlayTrigger>
               <FormGroup controlId="formBasicText">
-                <FormControl type="number" inputRef={input => this.memberId = input} placeholder="Iracing Member ID" required />
+                <FormControl type="number" inputRef={input => this.memberId = input} placeholder="Iracing Member ID" required onChange={this.validateNewMemberId} />
               </FormGroup>
               <FormGroup controlId="formBasicText">
                 <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
@@ -132,7 +151,8 @@ export class Navigation extends React.Component {
                 <FormControl type="password" inputRef={input => this.password2 = input} placeholder="Confirm Password" required onChange={this.validatePassword}/>
               </FormGroup>
               {passwordErrorMsg}
-              <Button type='submit' disabled={!this.props.state.isValidPassword}>Submit</Button>
+              {memberIdErrorMsg}
+              <Button type='submit' disabled={!this.props.state.isValidPassword || !this.props.state.idIsValid}>Submit</Button>
             </form>
           </Modal.Body>          
         </Modal>

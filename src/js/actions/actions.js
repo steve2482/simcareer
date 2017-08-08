@@ -25,8 +25,7 @@ export const enterUserState = (user) => ({
 });
 
 // Register User
-export const registerNewUser = (newUser, history) => dispatch => {
-  console.log('registering user'); 
+export const registerNewUser = (newUser, history) => dispatch => { 
   const url = process.env.REACT_APP_ROOT_URL + '/register';
   const payload = JSON.stringify(newUser);
   const request = new Request(url, {
@@ -53,6 +52,40 @@ export const registerNewUser = (newUser, history) => dispatch => {
     dispatch(enterUserState(response));
   })
   .then(() => history.push('/about'))
+  .catch(error => console.log(error));
+}
+
+// Set idIsValid
+export const ID_IS_VALID = 'ID_IS_VALID';
+export const setIdIsValid = boolean => ({
+  type: ID_IS_VALID,
+  boolean
+});
+
+// Validate MemberId is not in use
+export const validateNewMemberId = (memberId) => dispatch => {
+  const url = process.env.REACT_APP_ROOT_URL + '/validate-memberId';
+  const payload = JSON.stringify(memberId);
+  const request = new Request(url, {
+    method: 'POST',
+    body: payload,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: 'include'
+  });
+  return fetch(request)
+  .then(response => {
+    if (!response.ok) {
+      const error = new Error('Something went wrong while validating memberId');
+      console.log(error);
+    }
+    return response.json();
+  })
+  .then(response => {
+    dispatch(setErrors(response.message));
+    dispatch(setIdIsValid(response.idIsValid));
+  })
   .catch(error => console.log(error));
 }
 
