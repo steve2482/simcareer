@@ -6,7 +6,8 @@ const UserSchema = mongoose.Schema({
   name: String,
   email: String,
   memberId: Number,
-  password: String,
+  userName: String,
+  password: String
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);
@@ -18,6 +19,15 @@ module.exports.createUser = function(newUser, callback) {
       newUser.save(callback);
     });
   });
+};
+
+module.exports.getUserByUsername = function(userName, callback) {
+  let query = {userName: userName};
+  User.findOne(query, callback);
+};
+
+module.exports.getUserById = function(id, callback) {
+  User.findById(id, callback);
 };
 
 module.exports.comparePassword = function(candidatePassword, hash, callback) {

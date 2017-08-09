@@ -18,6 +18,7 @@ export class Navigation extends React.Component {
     this.registerUser = this.registerUser.bind(this);
     this.validatePassword = this.validatePassword.bind(this);
     this.validateNewMemberId = this.validateNewMemberId.bind(this);
+    this.userLogIn = this.userLogIn.bind(this);
   }
 
   toggleLoginModal() {
@@ -36,6 +37,7 @@ export class Navigation extends React.Component {
       name: this.firstName.value + ' ' + this.lastName.value,
       email: this.email.value,
       memberId: this.memberId.value,
+      userName: this.userName.value,
       password: this.password.value,
       password2: this.password2.value
     };
@@ -61,7 +63,20 @@ export class Navigation extends React.Component {
       actions.setValidPassword(boolean));
   }
 
+  userLogIn(e) {
+    e.preventDefault();
+    const user = {
+      username: this.userName.value,
+      password: this.password.value
+    };
+    this.props.dispatch(
+      actions.userLogIn(user, this.props.history));
+    this.props.dispatch(
+      actions.toggleLoginModal());
+  }
+
   render() {
+    console.log(this.props.state);
     // Tooltip for memberId field
     const memberIdTooltip = (
       <Tooltip id='tooltip'>Your Iracing member id is used to gather your race results only. In no way can we access your Iracing account info.</Tooltip>);
@@ -77,6 +92,13 @@ export class Navigation extends React.Component {
     let memberIdErrorMsg;
     if (!this.props.state.idIsValid) {
       memberIdErrorMsg = (
+        <ErrorMessage message={this.props.state.errors} />
+      );
+    }
+
+    let loginErrors;
+    if (this.props.state.errors) {
+      loginErrors = (
         <ErrorMessage message={this.props.state.errors} />
       );
     }
@@ -108,19 +130,18 @@ export class Navigation extends React.Component {
             <Modal.Title>Login</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <form>
+            <form onSubmit={this.userLogIn}>
               <FormGroup controlId="formBasicText">
-                <FormControl type="email" placeholder="Email Address" required />
+                <FormControl type="text" inputRef={input => this.userName = input} placeholder="Username" required />
               </FormGroup>
               <FormGroup controlId="formBasicText">
-                <FormControl type="password" placeholder="Password" required />
+                <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
               </FormGroup>
-              <a href='#'>Forgot Password</a>
+              <a href='#'>Forgot Password</a><br>
+              {loginErrors}
+              <Button type='submit'>Login</Button>
             </form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button>Login</Button>
-          </Modal.Footer>
+          </Modal.Body> 
         </Modal>
 
       {/*Register Modal*/}
@@ -145,6 +166,9 @@ export class Navigation extends React.Component {
                 <FormControl type="number" inputRef={input => this.memberId = input} placeholder="Iracing Member ID" required onChange={this.validateNewMemberId} />
               </FormGroup>
               <FormGroup controlId="formBasicText">
+                <FormControl type="text" inputRef={input => this.userName = input} placeholder="Username" required />
+              </FormGroup>
+              <FormGroup controlId="formBasicText">
                 <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
               </FormGroup>
               <FormGroup controlId="formBasicText">
@@ -152,7 +176,7 @@ export class Navigation extends React.Component {
               </FormGroup>
               {passwordErrorMsg}
               {memberIdErrorMsg}
-              <Button type='submit' disabled={!this.props.state.isValidPassword || !this.props.state.idIsValid}>Submit</Button>
+              <Button type='submit' disabled={!this.props.state.isValidPassword || !this.props.state.idIsValid}>Register</Button>
             </form>
           </Modal.Body>          
         </Modal>

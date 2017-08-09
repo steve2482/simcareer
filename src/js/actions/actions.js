@@ -95,3 +95,39 @@ export const setValidPassword = (boolean) => ({
   type: SET_VALID_PASSWORD,
   boolean
 });
+
+// User Login
+export const userLogIn = (user, history) => dispatch => {
+  const url = process.env.REACT_APP_ROOT_URL + '/login';
+  const payload = JSON.stringify(user);
+  const request = new Request(url, {
+    method: 'POST',
+    body: payload,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: 'include'
+  });
+  return fetch(request)
+  .then(response => {
+    console.log(response);
+    if (!response.ok) {
+      const error = new Error('Something went wrong during user login.');
+      console.log(error);
+      response.json()
+      .then(response => {
+        dispatch(setErrors(response));
+      });
+    }
+    else {
+      response.json()
+      .then(response => {
+        dispatch(enterUserState(response));
+      })
+      .then(() => {
+        history.push('/');
+      });      
+    }
+  })
+  .catch(error => console.log(error));
+}

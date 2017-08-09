@@ -4,7 +4,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const expressValidator = require('express-validator');
 const session = require('express-session');
 
 // Models
@@ -38,25 +37,7 @@ app.use(session({
   rolling: true
 }));
 app.use(passport.initialize());
-
-// Express Validator=================================================
-// ==================================================================
-app.use(expressValidator({
-  errorFormatter: function(param, msg, value) {
-      var namespace = param.split('.')
-      , root    = namespace.shift()
-      , formParam = root;
- 
-    while(namespace.length) {
-      formParam += '[' + namespace.shift() + ']';
-    }
-    return {
-      param : formParam,
-      msg   : msg,
-      value : value
-    };
-  }
-}));
+app.use(passport.session());
 
 // User Registration=================================================
 // ==================================================================
@@ -64,13 +45,15 @@ app.post('/register', (req, res) => {
   let name = req.body.name;
   let email = req.body.email;
   let memberId = req.body.memberId;
+  let userName = req.body.userName;
   let password = req.body.password;
   let password2 = req.body.password2;
   let newUser = new User({
     name: name,
     email: email,
     memberId: memberId,
-    password: password,
+    userName: userName,
+    password: password
   });
 
   User.createUser(newUser, function(err, user) {          
@@ -108,5 +91,59 @@ app.post('/validate-memberId', (req, res) => {
     }
   });
 });
+
+// Login Strategy====================================================
+// ==================================================================
+passport.use(new LocalStrategy(
+  function(userName, password, done) {
+    User.getUserByUsername(userName, function(err, user) {
+      if (err) {
+        throw err;
+      }
+      if (!user) {
+        return done(null, false, {message: 'Unknown user'});
+      }
+      User.comparePassword(password, user.password, function(err, isMatch) {
+        if (err) {
+          throw err;
+        }
+        if (isMatch) {
+          return done(null, user);
+        } else {
+          return done(null, false, {message: 'Invalid password'});
+        }
+      });
+    });
+  }));
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.getUserById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+// User Login========================================================
+// ==================================================================
+app.post('/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) {return next(err);}
+    if (!user) {
+      const message = info.message
+      console.log(message);
+      res.status(400).json(message);
+    }
+    req.logIn(user, function(err) {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).json(req.user);
+    });
+  })(req, res, next);
+});
+  
 
 module.exports = app;
