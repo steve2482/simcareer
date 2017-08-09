@@ -71,8 +71,6 @@ export class Navigation extends React.Component {
     };
     this.props.dispatch(
       actions.userLogIn(user, this.props.history));
-    this.props.dispatch(
-      actions.toggleLoginModal());
   }
 
   render() {
@@ -137,7 +135,7 @@ export class Navigation extends React.Component {
               <FormGroup controlId="formBasicText">
                 <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
               </FormGroup>
-              <a href='#'>Forgot Password</a><br>
+              <a href='#'>Forgot Password</a><br/>
               {loginErrors}
               <Button type='submit'>Login</Button>
             </form>

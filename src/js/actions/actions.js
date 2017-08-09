@@ -123,6 +123,7 @@ export const userLogIn = (user, history) => dispatch => {
       response.json()
       .then(response => {
         dispatch(enterUserState(response));
+        dispatch(toggleLoginModal());
       })
       .then(() => {
         history.push('/');
