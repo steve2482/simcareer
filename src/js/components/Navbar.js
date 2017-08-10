@@ -5,6 +5,7 @@ import * as actions from '../actions/actions.js';
 // Imported Components
 import { Link } from 'react-router-dom';
 import { Button, FormControl, FormGroup, Glyphicon, MenuItem, Modal, Navbar, Nav, NavItem, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { FaArchive } from 'react-icons/lib/fa';
 import ErrorMessage from './Error-message.js';
 
 // Stylesheet
@@ -15,6 +16,7 @@ export class Navigation extends React.Component {
     super(props);
     this.toggleLoginModal = this.toggleLoginModal.bind(this);
     this.toggleRegisterModal = this.toggleRegisterModal.bind(this);
+    this.toggleContactModal = this.toggleContactModal.bind(this);
     this.registerUser = this.registerUser.bind(this);
     this.validatePassword = this.validatePassword.bind(this);
     this.validateNewMemberId = this.validateNewMemberId.bind(this);
@@ -29,6 +31,11 @@ export class Navigation extends React.Component {
   toggleRegisterModal() {
     this.props.dispatch(
       actions.toggleRegisterModal());
+  }
+
+  toggleContactModal() {
+    this.props.dispatch(
+      actions.toggleContactModal());
   }
 
   registerUser(e) {
@@ -101,85 +108,218 @@ export class Navigation extends React.Component {
       );
     }
 
-    return (
-      <div>
-        {/*Navbar*/}
-        <Navbar inverse collapseOnSelect>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <Link to='/'>SimCareer</Link>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav>
-            <NavItem eventKey={1}><Link to='/about'><Glyphicon glyph='question-sign' /> About</Link></NavItem>
-          </Nav>
-          <Nav pullRight>
-            <NavItem eventKey={1} onClick={this.toggleLoginModal}><Glyphicon glyph='user' /> Login</NavItem>
-            <NavItem eventKey={2} onClick={this.toggleRegisterModal}><Glyphicon glyph='pencil' /> Register</NavItem>
-          </Nav>
-        </Navbar.Collapse>
-        </Navbar>
+    // IF USER IS SIGNED IN
+    if (this.props.state.user) {
+      return (
+        <div>
+          {/*Navbar*/}
+          <Navbar inverse collapseOnSelect>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <Link to='/'>SimCareer</Link>
+            </Navbar.Brand>
+            <Navbar.Toggle />
+          </Navbar.Header>
+          <Navbar.Collapse>
+            <Nav>
+              <NavItem><Link to='/about'><Glyphicon glyph='question-sign' /> About </Link></NavItem>
+            </Nav>
+            <Nav pullRight>
+              <NavItem><Glyphicon glyph='dashboard' /> Dashboard</NavItem>
+              <NavItem><Glyphicon glyph='flag' /> Current Season</NavItem>
+              <NavItem><Glyphicon glyph='briefcase' /> Contracts</NavItem>
+              <NavItem><Glyphicon glyph='stats' /> Career Stats</NavItem>
+              <NavItem><FaArchive /> All time Stats</NavItem>
+              <NavItem><Glyphicon glyph='log-out' /> Logout</NavItem>
+              <NavItem onClick={this.toggleContactModal}><Glyphicon glyph='envelope' /> Contact </NavItem>
+            </Nav>
+          </Navbar.Collapse>
+          </Navbar>
 
-        {/*Login Modal*/}
-        <Modal show={this.props.state.showLogin} onHide={this.toggleLoginModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Login</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <form onSubmit={this.userLogIn}>
-              <FormGroup controlId="formBasicText">
-                <FormControl type="text" inputRef={input => this.userName = input} placeholder="Username" required />
-              </FormGroup>
-              <FormGroup controlId="formBasicText">
-                <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
-              </FormGroup>
-              <a href='#'>Forgot Password</a><br/>
-              {loginErrors}
-              <Button type='submit'>Login</Button>
-            </form>
-          </Modal.Body> 
-        </Modal>
+          {/*Login Modal*/}
+          <Modal show={this.props.state.showLogin} onHide={this.toggleLoginModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Login</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form onSubmit={this.userLogIn}>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="text" inputRef={input => this.userName = input} placeholder="Username" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
+                </FormGroup>
+                <a href='#'>Forgot Password</a><br/>
+                {loginErrors}
+                <Button type='submit'>Login</Button>
+              </form>
+            </Modal.Body> 
+          </Modal>
 
-      {/*Register Modal*/}
-        <Modal show={this.props.state.showRegister} onHide={this.toggleRegisterModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Register</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <form onSubmit={this.registerUser}>
-              <FormGroup controlId="formBasicText">
-                <FormControl type="text" inputRef={input => this.firstName = input} placeholder="First Name" required />
-              </FormGroup>
-              <FormGroup controlId="formBasicText">
-                <FormControl type="text" inputRef={input => this.lastName = input} placeholder="Last Name" required />
-              </FormGroup>
-              <FormGroup controlId="formBasicText">
-                <FormControl type="email" inputRef={input => this.email = input} placeholder="Email Address" required />
-              </FormGroup>
-              <OverlayTrigger placement='right' overlay={memberIdTooltip}><Glyphicon glyph='question-sign' />
-              </OverlayTrigger>
-              <FormGroup controlId="formBasicText">
-                <FormControl type="number" inputRef={input => this.memberId = input} placeholder="Iracing Member ID" required onChange={this.validateNewMemberId} />
-              </FormGroup>
-              <FormGroup controlId="formBasicText">
-                <FormControl type="text" inputRef={input => this.userName = input} placeholder="Username" required />
-              </FormGroup>
-              <FormGroup controlId="formBasicText">
-                <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
-              </FormGroup>
-              <FormGroup controlId="formBasicText">
-                <FormControl type="password" inputRef={input => this.password2 = input} placeholder="Confirm Password" required onChange={this.validatePassword}/>
-              </FormGroup>
-              {passwordErrorMsg}
-              {memberIdErrorMsg}
-              <Button type='submit' disabled={!this.props.state.isValidPassword || !this.props.state.idIsValid}>Register</Button>
-            </form>
-          </Modal.Body>          
-        </Modal>
-      </div>
-    );
+          {/*Register Modal*/}
+          <Modal show={this.props.state.showRegister} onHide={this.toggleRegisterModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Register</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form onSubmit={this.registerUser}>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="text" inputRef={input => this.firstName = input} placeholder="First Name" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="text" inputRef={input => this.lastName = input} placeholder="Last Name" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="email" inputRef={input => this.email = input} placeholder="Email Address" required />
+                </FormGroup>
+                <OverlayTrigger placement='right' overlay={memberIdTooltip}><Glyphicon glyph='question-sign' />
+                </OverlayTrigger>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="number" inputRef={input => this.memberId = input} placeholder="Iracing Member ID" required onChange={this.validateNewMemberId} />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="text" inputRef={input => this.userName = input} placeholder="Username" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="password" inputRef={input => this.password2 = input} placeholder="Confirm Password" required onChange={this.validatePassword}/>
+                </FormGroup>
+                {passwordErrorMsg}
+                {memberIdErrorMsg}
+                <Button type='submit' disabled={!this.props.state.isValidPassword || !this.props.state.idIsValid}>Register</Button>
+              </form>
+            </Modal.Body>          
+          </Modal>
+
+          {/*Contact Modal*/}
+          <Modal show={this.props.state.showContact} onHide={this.toggleContactModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Contact</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type='text' inputRef={input => this.name = input} placeholder='Name' required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="email" inputRef={input => this.email = input} placeholder="Email" required />
+                </FormGroup>
+                <FormGroup controlId="formControlsTextarea">
+                  <FormControl componentClass='textarea' inputRef={input => this.message = input} placeholder="What can we do to help?" required />
+                </FormGroup>
+                <Button type='submit'>Submit</Button>
+              </form>
+            </Modal.Body> 
+          </Modal>
+        </div>
+      )
+    } else {
+    // IF USER IS NOT SIGNED IN======================================
+    // ==============================================================
+       return (
+        <div>
+          {/*Navbar*/}
+          <Navbar inverse collapseOnSelect>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <Link to='/'>SimCareer</Link>
+            </Navbar.Brand>
+            <Navbar.Toggle />
+          </Navbar.Header>
+          <Navbar.Collapse>
+            <Nav>
+              <NavItem eventKey={1}><Link to='/about'><Glyphicon glyph='question-sign' /> About </Link></NavItem>
+            </Nav>
+            <Nav pullRight>
+              <NavItem eventKey={1} onClick={this.toggleLoginModal}><Glyphicon glyph='user' /> Login </NavItem>
+              <NavItem eventKey={2} onClick={this.toggleRegisterModal}><Glyphicon glyph='pencil' /> Register </NavItem>
+              <NavItem onClick={this.toggleContactModal}><Glyphicon glyph='envelope' /> Contact </NavItem>
+            </Nav>
+          </Navbar.Collapse>
+          </Navbar>
+
+          {/*Login Modal*/}
+          <Modal show={this.props.state.showLogin} onHide={this.toggleLoginModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Login</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form onSubmit={this.userLogIn}>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="text" inputRef={input => this.userName = input} placeholder="Username" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
+                </FormGroup>
+                <a href='#'>Forgot Password</a><br/>
+                {loginErrors}
+                <Button type='submit'>Login</Button>
+              </form>
+            </Modal.Body> 
+          </Modal>
+
+          {/*Register Modal*/}
+          <Modal show={this.props.state.showRegister} onHide={this.toggleRegisterModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Register</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form onSubmit={this.registerUser}>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="text" inputRef={input => this.firstName = input} placeholder="First Name" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="text" inputRef={input => this.lastName = input} placeholder="Last Name" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="email" inputRef={input => this.email = input} placeholder="Email Address" required />
+                </FormGroup>
+                <OverlayTrigger placement='right' overlay={memberIdTooltip}><Glyphicon glyph='question-sign' />
+                </OverlayTrigger>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="number" inputRef={input => this.memberId = input} placeholder="Iracing Member ID" required onChange={this.validateNewMemberId} />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="text" inputRef={input => this.userName = input} placeholder="Username" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="password" inputRef={input => this.password2 = input} placeholder="Confirm Password" required onChange={this.validatePassword}/>
+                </FormGroup>
+                {passwordErrorMsg}
+                {memberIdErrorMsg}
+                <Button type='submit' disabled={!this.props.state.isValidPassword || !this.props.state.idIsValid}>Register</Button>
+              </form>
+            </Modal.Body>          
+          </Modal>
+
+          {/*Contact Modal*/}
+          <Modal show={this.props.state.showContact} onHide={this.toggleContactModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Contact</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type='text' inputRef={input => this.name = input} placeholder='Name' required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="email" inputRef={input => this.email = input} placeholder="Email" required />
+                </FormGroup>
+                <FormGroup controlId="formControlsTextarea">
+                  <FormControl componentClass='textarea' inputRef={input => this.message = input} placeholder="What can we do to help?" required />
+                </FormGroup>
+                <Button type='submit'>Submit</Button>
+              </form>
+            </Modal.Body> 
+          </Modal>
+        </div>
+      );
+    }    
   }  
 }
 

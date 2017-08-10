@@ -4,6 +4,7 @@ import update from 'immutability-helper';
 const appState = {
   showLogin: false,
   showRegister: false,
+  showContact: false,
   errors: null,
   isValidPassword: true,
   user: null,
@@ -22,6 +23,13 @@ export const simCareerReducer = (state=appState, action) => {
   if (action.type === actions.TOGGLE_REGISTER_MODAL) {
     let showRegister = state.showRegister;
     const newAppState = update(state, {showRegister: {$set: !showRegister}});
+    return newAppState;
+  }
+
+  // Toggle Contact Modal
+  if (action.type === actions.TOGGLE_CONTACT_MODAL) {
+    let showRegister = state.showContact;
+    const newAppState = update(state, {showContact: {$set: !showRegister}});
     return newAppState;
   }
 

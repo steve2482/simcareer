@@ -10,6 +10,12 @@ export const toggleRegisterModal = () => ({
   type : TOGGLE_REGISTER_MODAL
 });
 
+// Toggle Contact Modal
+export const TOGGLE_CONTACT_MODAL = 'TOGGLE_CONTACT_MODAL';
+export const toggleContactModal = () => ({
+  type : TOGGLE_CONTACT_MODAL
+});
+
 // Set Errors
 export const SET_ERRORS = 'SET_ERRORS';
 export const setErrors = errors => ({
