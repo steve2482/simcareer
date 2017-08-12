@@ -109,13 +109,14 @@ export class Navigation extends React.Component {
 
     // IF USER IS SIGNED IN
     if (this.props.state.user) {
+      const user = this.props.state.user;
       return (
         <div>
           {/*Navbar*/}
           <Navbar inverse collapseOnSelect>
           <Navbar.Header>
             <Navbar.Brand>
-              <Link to='/'>SimCareer</Link>
+              SimCareer
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
@@ -124,11 +125,11 @@ export class Navigation extends React.Component {
               <NavItem><Link to='/about'><Glyphicon glyph='question-sign' /> About </Link></NavItem>
             </Nav>
             <Nav pullRight>
-              <NavItem><Glyphicon glyph='dashboard' /> Dashboard</NavItem>
-              <NavItem><Glyphicon glyph='flag' /> Current Season</NavItem>
-              <NavItem><Glyphicon glyph='briefcase' /> Contracts</NavItem>
-              <NavItem><Glyphicon glyph='stats' /> Career Stats</NavItem>
-              <NavItem><FaArchive /> All time Stats</NavItem>
+              <NavItem><Link to={`/${user.userName}/dashboard`}><Glyphicon glyph='dashboard' /> Dashboard</Link></NavItem>
+              <NavItem><Link to={`/${user.userName}/current-season`}><Glyphicon glyph='flag' /> Current Season</Link></NavItem>
+              <NavItem><Link to={`/${user.userName}/contracts`}><Glyphicon glyph='briefcase' /> Contracts</Link></NavItem>
+              <NavItem><Link to={`/${user.userName}/career-stats`}><Glyphicon glyph='stats' /> Career Stats</Link></NavItem>
+              <NavItem><Link to={`/${user.userName}/all-time-stats`}><FaArchive /> All time Stats</Link></NavItem>
               <NavItem><Glyphicon glyph='log-out' /> Logout</NavItem>
               <NavItem onClick={this.toggleContactModal}><Glyphicon glyph='envelope' /> Contact </NavItem>
             </Nav>
