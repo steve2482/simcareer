@@ -1,25 +1,25 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 
 // Components
 import About from './About.js';
 import LandingPage from './Landing-page.js';
 import Navigation from './Navbar';
+import UserDashboard from './User-dashboard';
 
 // Get history
 const history = createBrowserHistory();
 
 export default function App() {
   return(
-    <Router history={history}>
+    <BrowserRouter history={history}>
       <div className='layout'>
-        <Navigation />
-        <main>
-          <Route exact path='/' component={LandingPage} />
-          <Route exact path='/about' component={About} />
-        </main>        
+        <Route component={Navigation} />        
+        <Route exact path='/' component={LandingPage} />
+        <Route exact path='/about' component={About} />
+        <Route exact path='/:username/dashboard' component={UserDashboard} />       
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }

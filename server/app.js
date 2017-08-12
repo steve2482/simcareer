@@ -62,9 +62,7 @@ app.post('/register', (req, res) => {
     } else {
       res.status(200).json(user);
     }          
-  });
-    
-          
+  });       
 });
 
 // MemberId Validation During Registration

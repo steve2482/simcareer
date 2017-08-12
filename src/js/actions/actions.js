@@ -56,8 +56,9 @@ export const registerNewUser = (newUser, history) => dispatch => {
   })
   .then(response => {
     dispatch(enterUserState(response));
+    return response;
   })
-  .then(() => history.push('/about'))
+  .then((user) => history.push(`/${user.userName}/dashboard`))
   .catch(error => console.log(error));
 }
 
