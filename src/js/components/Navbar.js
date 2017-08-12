@@ -81,7 +81,6 @@ export class Navigation extends React.Component {
   }
 
   render() {
-    console.log(this.props.state);
     // Tooltip for memberId field
     const memberIdTooltip = (
       <Tooltip id='tooltip'>Your Iracing member id is used to gather your race results only. In no way can we access your Iracing account info.</Tooltip>);

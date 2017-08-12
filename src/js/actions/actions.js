@@ -130,9 +130,10 @@ export const userLogIn = (user, history) => dispatch => {
       .then(response => {
         dispatch(enterUserState(response));
         dispatch(toggleLoginModal());
+        return response.userName
       })
-      .then(() => {
-        history.push('/');
+      .then(userName => {
+        history.push(`/${userName}/dashboard`);
       });      
     }
   })
