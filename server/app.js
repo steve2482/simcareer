@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
+const transporter = require('./nodemailer-config.js');
 
 // Models
 const User = require('./models/user.js');
@@ -61,6 +62,18 @@ app.post('/register', (req, res) => {
       throw err;
     } else {
       res.status(200).json(user);
+      let mailOptions = {
+        from:'"SimCareer Support" <SimCareer.contact@gmail.com>',
+        to: email,
+        subject: 'Confirm Registration',
+        text: 'Thank you for registering!'
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        console.log('Message %s sent: %s', info.messageId, info.response);
+      });
     }          
   });       
 });

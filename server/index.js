@@ -1,6 +1,6 @@
 'use strict';
 
-const app = require('./app');
+const app = require('./app.js');
 const { DATABASE_URL, PORT } = require('./config.js');
 
 // ==============================================================
