@@ -17,10 +17,12 @@ export class Navigation extends React.Component {
     this.toggleLoginModal = this.toggleLoginModal.bind(this);
     this.toggleRegisterModal = this.toggleRegisterModal.bind(this);
     this.toggleContactModal = this.toggleContactModal.bind(this);
+    this.toggleContactSuccessModal = this.toggleContactSuccessModal.bind(this);
     this.registerUser = this.registerUser.bind(this);
     this.validatePassword = this.validatePassword.bind(this);
     this.validateNewMemberId = this.validateNewMemberId.bind(this);
     this.userLogIn = this.userLogIn.bind(this);
+    this.submitContactForm = this.submitContactForm.bind(this);
   }
 
   toggleLoginModal() {
@@ -36,6 +38,11 @@ export class Navigation extends React.Component {
   toggleContactModal() {
     this.props.dispatch(
       actions.toggleContactModal());
+  }
+
+  toggleContactSuccessModal() {
+    this.props.dispatch(
+      actions.toggleContactSuccessModal());
   }
 
   registerUser(e) {
@@ -80,7 +87,20 @@ export class Navigation extends React.Component {
       actions.userLogIn(user, this.props.history));
   }
 
+  submitContactForm(e) {
+    e.preventDefault();
+    const info = {
+      name: this.name.value,
+      email: this.email.value,
+      message: this.message.value
+    };
+    this.props.dispatch(
+      actions.sendSupportTicket(info));
+    this.toggleContactModal();
+  }
+
   render() {
+    console.log(this.props.state);
     // Tooltip for memberId field
     const memberIdTooltip = (
       <Tooltip id='tooltip'>Your Iracing member id is used to gather your race results only. In no way can we access your Iracing account info.</Tooltip>);
@@ -100,9 +120,9 @@ export class Navigation extends React.Component {
       );
     }
 
-    let loginErrors;
+    let errors;
     if (this.props.state.errors) {
-      loginErrors = (
+      errors = (
         <ErrorMessage message={this.props.state.errors} />
       );
     }
@@ -150,7 +170,7 @@ export class Navigation extends React.Component {
                   <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
                 </FormGroup>
                 <a href='#'>Forgot Password</a><br/>
-                {loginErrors}
+                {errors}
                 <Button type='submit'>Login</Button>
               </form>
             </Modal.Body> 
@@ -199,7 +219,7 @@ export class Navigation extends React.Component {
               <Modal.Title>Contact</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <form>
+              <form onSubmit={this.submitContactForm} >
                 <FormGroup controlId="formBasicText">
                   <FormControl type='text' inputRef={input => this.name = input} placeholder='Name' required />
                 </FormGroup>
@@ -209,9 +229,23 @@ export class Navigation extends React.Component {
                 <FormGroup controlId="formControlsTextarea">
                   <FormControl componentClass='textarea' inputRef={input => this.message = input} placeholder="What can we do to help?" required />
                 </FormGroup>
+                {errors}
                 <Button type='submit'>Submit</Button>
               </form>
             </Modal.Body> 
+          </Modal>
+
+          {/*Contact Success Modal*/}
+          <Modal show={this.props.state.showContactSuccess} onHide={this.toggleContactSuccessModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Thank You!</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p className='alert alert-success'>Your message was received. Please allow support 24 hours to respond to your inquire.</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={this.toggleContactSuccessModal}>Ok</Button>
+            </Modal.Footer> 
           </Modal>
         </div>
       )
@@ -254,7 +288,7 @@ export class Navigation extends React.Component {
                   <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
                 </FormGroup>
                 <a href='#'>Forgot Password</a><br/>
-                {loginErrors}
+                {errors}
                 <Button type='submit'>Login</Button>
               </form>
             </Modal.Body> 
@@ -303,7 +337,7 @@ export class Navigation extends React.Component {
               <Modal.Title>Contact</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <form>
+              <form onSubmit={this.submitContactForm}>
                 <FormGroup controlId="formBasicText">
                   <FormControl type='text' inputRef={input => this.name = input} placeholder='Name' required />
                 </FormGroup>
@@ -313,9 +347,23 @@ export class Navigation extends React.Component {
                 <FormGroup controlId="formControlsTextarea">
                   <FormControl componentClass='textarea' inputRef={input => this.message = input} placeholder="What can we do to help?" required />
                 </FormGroup>
+                {errors}
                 <Button type='submit'>Submit</Button>
               </form>
             </Modal.Body> 
+          </Modal>
+
+        {/*Contact Success Modal*/}
+          <Modal show={this.props.state.showContactSuccess} onHide={this.toggleContactSuccessModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Thank You!</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p className='alert alert-success'>Your message was received. Please allow support 24 hours to respond to your inquire.</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={this.toggleContactSuccessModal}>Ok</Button>
+            </Modal.Footer> 
           </Modal>
         </div>
       );

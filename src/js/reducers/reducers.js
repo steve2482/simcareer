@@ -5,6 +5,7 @@ const appState = {
   showLogin: false,
   showRegister: false,
   showContact: false,
+  showContactSuccess: false,
   errors: null,
   isValidPassword: true,
   user: null,
@@ -30,6 +31,13 @@ export const simCareerReducer = (state=appState, action) => {
   if (action.type === actions.TOGGLE_CONTACT_MODAL) {
     let showRegister = state.showContact;
     const newAppState = update(state, {showContact: {$set: !showRegister}});
+    return newAppState;
+  }
+
+  // Toggle Contact Success Modal
+  if (action.type === actions.TOGGLE_CONTACT_SUCCESS_MODAL) {
+    let showContactSuccess = state.showContactSuccess;
+    const newAppState = update(state, {showContactSuccess: {$set: !showContactSuccess}});
     return newAppState;
   }
 

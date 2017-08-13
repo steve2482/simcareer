@@ -155,6 +155,31 @@ app.post('/login', function(req, res, next) {
     });
   })(req, res, next);
 });
-  
+
+// ==================================================================
+// SUPPORT===========================================================
+// ==================================================================
+
+// Send Support Email================================================
+// ==================================================================
+app.post('/contact', function(req, res) {
+  let userEmail = req.body.email;
+  let mailOptions = {
+    from: `${req.body.name} <${userEmail}>`,
+    to: 'SimCareer.contact@gmail.com',
+    subject: 'Support Ticket',
+    html: `<h3>${req.body.name}</h3>
+          <h4>${req.body.email}</h4>
+          <p>${req.body.message}</p>`
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.status(400).json(error);
+    }
+    console.log('Message %s sent: %s', info.messageId, info.response);
+    res.status(200).json('message sent');
+  });
+})
 
 module.exports = app;

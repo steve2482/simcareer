@@ -117,7 +117,6 @@ export const userLogIn = (user, history) => dispatch => {
   });
   return fetch(request)
   .then(response => {
-    console.log(response);
     if (!response.ok) {
       const error = new Error('Something went wrong during user login.');
       console.log(error);
@@ -139,4 +138,40 @@ export const userLogIn = (user, history) => dispatch => {
     }
   })
   .catch(error => console.log(error));
+}
+
+// Toggle Contact Sucess Modal
+export const TOGGLE_CONTACT_SUCCESS_MODAL = 'TOGGLE_CONTACT_SUCCESS_MODAL';
+export const toggleContactSuccessModal = () => ({
+  type : TOGGLE_CONTACT_SUCCESS_MODAL
+}); 
+
+// Submit Support Ticket
+export const sendSupportTicket = info => dispatch => {
+  const url = process.env.REACT_APP_ROOT_URL + '/contact';
+  const payload = JSON.stringify(info);
+  const request = new Request(url, {
+    method: 'POST',
+    body: payload,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: 'include'
+  });
+  let emailSent;
+  return fetch(request)
+  .then(response => {
+    console.log(response);
+    if (!response.ok) {
+      const error = new Error('Something went wrong while sending support email');
+      console.log(error);
+      response.json()
+      .then(response => {
+        dispatch(setErrors(response));
+      });
+    } else {
+      console.log('showing contact sucesse modal');
+      dispatch(toggleContactSuccessModal());
+    }
+  })
 }
