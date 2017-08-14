@@ -54,7 +54,8 @@ export class Navigation extends React.Component {
       memberId: this.memberId.value,
       userName: this.userName.value,
       password: this.password.value,
-      password2: this.password2.value
+      password2: this.password2.value,
+      secretAnswer: this.answer.value
     };
     this.props.dispatch(
       actions.registerNewUser(newUser, this.props.history));
@@ -163,63 +164,6 @@ export class Navigation extends React.Component {
           </Navbar.Collapse>
           </Navbar>
 
-          {/*Login Modal*/}
-          <Modal show={this.props.state.showLogin} onHide={this.toggleLoginModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>Login</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <form onSubmit={this.userLogIn}>
-                <FormGroup controlId="formBasicText">
-                  <FormControl type="text" inputRef={input => this.userName = input} placeholder="Username" required />
-                </FormGroup>
-                <FormGroup controlId="formBasicText">
-                  <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
-                </FormGroup>
-                <a href='#'>Forgot Password</a><br/>
-                {errors}
-                <Button type='submit'>Login</Button>
-              </form>
-            </Modal.Body> 
-          </Modal>
-
-          {/*Register Modal*/}
-          <Modal show={this.props.state.showRegister} onHide={this.toggleRegisterModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>Register</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <form onSubmit={this.registerUser}>
-                <FormGroup controlId="formBasicText">
-                  <FormControl type="text" inputRef={input => this.firstName = input} placeholder="First Name" required />
-                </FormGroup>
-                <FormGroup controlId="formBasicText">
-                  <FormControl type="text" inputRef={input => this.lastName = input} placeholder="Last Name" required />
-                </FormGroup>
-                <FormGroup controlId="formBasicText">
-                  <FormControl type="email" inputRef={input => this.email = input} placeholder="Email Address" required />
-                </FormGroup>
-                <OverlayTrigger placement='right' overlay={memberIdTooltip}><Glyphicon glyph='question-sign' />
-                </OverlayTrigger>
-                <FormGroup controlId="formBasicText">
-                  <FormControl type="number" inputRef={input => this.memberId = input} placeholder="Iracing Member ID" required onChange={this.validateNewMemberId} />
-                </FormGroup>
-                <FormGroup controlId="formBasicText">
-                  <FormControl type="text" inputRef={input => this.userName = input} placeholder="Username" required />
-                </FormGroup>
-                <FormGroup controlId="formBasicText">
-                  <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
-                </FormGroup>
-                <FormGroup controlId="formBasicText">
-                  <FormControl type="password" inputRef={input => this.password2 = input} placeholder="Confirm Password" required onChange={this.validatePassword}/>
-                </FormGroup>
-                {passwordErrorMsg}
-                {memberIdErrorMsg}
-                <Button type='submit' disabled={!this.props.state.isValidPassword || !this.props.state.idIsValid}>Register</Button>
-              </form>
-            </Modal.Body>          
-          </Modal>
-
           {/*Contact Modal*/}
           <Modal show={this.props.state.showContact} onHide={this.toggleContactModal}>
             <Modal.Header closeButton>
@@ -301,6 +245,31 @@ export class Navigation extends React.Component {
             </Modal.Body> 
           </Modal>
 
+          {/*Forgot Password Modal*/}
+          <Modal show={this.props.state.showForgotPassword} onHide={this.toggleForgotPassword}>
+            <Modal.Header closeButton>
+              <Modal.Title>Reset Password</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form onSubmit={this.resetPassword}>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="text" inputRef={input => this.userName = input} placeholder="Username" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="text" inputRef={input => this.answer = input} placeholder="Secret Question: What is your favorite race car?" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="password" inputRef={input => this.password = input} placeholder="New Password" required />
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="password" inputRef={input => this.password2 = input} placeholder="Confirm New Password" required />
+                </FormGroup>
+                {errors}
+                <Button type='submit'>Reset Password</Button>
+              </form>
+            </Modal.Body> 
+          </Modal>
+
           {/*Register Modal*/}
           <Modal show={this.props.state.showRegister} onHide={this.toggleRegisterModal}>
             <Modal.Header closeButton>
@@ -330,6 +299,9 @@ export class Navigation extends React.Component {
                 </FormGroup>
                 <FormGroup controlId="formBasicText">
                   <FormControl type="password" inputRef={input => this.password2 = input} placeholder="Confirm Password" required onChange={this.validatePassword}/>
+                </FormGroup>
+                <FormGroup controlId="formBasicText">
+                  <FormControl type="text" inputRef={input => this.answer = input} placeholder="Secret Question: What is your favorite race car?" required />
                 </FormGroup>
                 {passwordErrorMsg}
                 {memberIdErrorMsg}

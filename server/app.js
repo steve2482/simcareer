@@ -48,13 +48,14 @@ app.post('/register', (req, res) => {
   let memberId = req.body.memberId;
   let userName = req.body.userName;
   let password = req.body.password;
-  let password2 = req.body.password2;
+  let secretAnswer = req.body.secretAnswer;
   let newUser = new User({
     name: name,
     email: email,
     memberId: memberId,
     userName: userName,
-    password: password
+    password: password,
+    secretAnswer: secretAnswer
   });
 
   User.createUser(newUser, function(err, user) {          
