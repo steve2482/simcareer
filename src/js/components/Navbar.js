@@ -15,12 +15,15 @@ export class Navigation extends React.Component {
   constructor(props) {
     super(props);
     this.toggleLoginModal = this.toggleLoginModal.bind(this);
+    this.toggleForgotPasswordModal = this.toggleForgotPasswordModal.bind(this);
     this.toggleRegisterModal = this.toggleRegisterModal.bind(this);
     this.toggleContactModal = this.toggleContactModal.bind(this);
     this.toggleContactSuccessModal = this.toggleContactSuccessModal.bind(this);
     this.registerUser = this.registerUser.bind(this);
     this.validatePassword = this.validatePassword.bind(this);
+    this.validateResetPassword = this.validateResetPassword.bind(this);
     this.validateNewMemberId = this.validateNewMemberId.bind(this);
+    this.resetPassword = this.resetPassword.bind(this);    
     this.userLogIn = this.userLogIn.bind(this);
     this.submitContactForm = this.submitContactForm.bind(this);
     this.userLogout = this.userLogout.bind(this);
@@ -29,6 +32,12 @@ export class Navigation extends React.Component {
   toggleLoginModal() {
     this.props.dispatch(
       actions.toggleLoginModal());
+  }
+
+  toggleForgotPasswordModal() {
+    this.toggleLoginModal();
+    this.props.dispatch(
+      actions.toggleForgotPasswordModal());
   }
 
   toggleRegisterModal() {
@@ -77,6 +86,25 @@ export class Navigation extends React.Component {
     let boolean = (password === password2)
     this.props.dispatch(
       actions.setValidPassword(boolean));
+  }
+
+  validateResetPassword() {
+    let password = this.newPassword.value;
+    let password2 = this.password2.value;
+    let boolean = (password === password2)
+    this.props.dispatch(
+      actions.setValidPassword(boolean));
+  }
+
+  resetPassword(e) {
+    e.preventDefault();
+    const userInfo = {
+      userName: this.userName.value,
+      answer: this.answer.value,
+      newPassword: this.newPassword.value
+    };
+    this.props.dispatch(
+      actions.resetPassword(userInfo));
   }
 
   userLogIn(e) {
@@ -238,7 +266,7 @@ export class Navigation extends React.Component {
                 <FormGroup controlId="formBasicText">
                   <FormControl type="password" inputRef={input => this.password = input} placeholder="Password" required />
                 </FormGroup>
-                <a href='#'>Forgot Password</a><br/>
+                <a href='#' onClick={this.toggleForgotPasswordModal}>Forgot Password</a><br/>
                 {errors}
                 <Button type='submit'>Login</Button>
               </form>
@@ -246,7 +274,7 @@ export class Navigation extends React.Component {
           </Modal>
 
           {/*Forgot Password Modal*/}
-          <Modal show={this.props.state.showForgotPassword} onHide={this.toggleForgotPassword}>
+          <Modal show={this.props.state.showForgotPassword} onHide={this.toggleForgotPasswordModal}>
             <Modal.Header closeButton>
               <Modal.Title>Reset Password</Modal.Title>
             </Modal.Header>
@@ -259,12 +287,12 @@ export class Navigation extends React.Component {
                   <FormControl type="text" inputRef={input => this.answer = input} placeholder="Secret Question: What is your favorite race car?" required />
                 </FormGroup>
                 <FormGroup controlId="formBasicText">
-                  <FormControl type="password" inputRef={input => this.password = input} placeholder="New Password" required />
+                  <FormControl type="password" inputRef={input => this.newPassword = input} placeholder="New Password" required />
                 </FormGroup>
                 <FormGroup controlId="formBasicText">
-                  <FormControl type="password" inputRef={input => this.password2 = input} placeholder="Confirm New Password" required />
+                  <FormControl type="password" inputRef={input => this.password2 = input} placeholder="Confirm New Password" required onChange={this.validateResetPassword} />
                 </FormGroup>
-                {errors}
+                {passwordErrorMsg}
                 <Button type='submit'>Reset Password</Button>
               </form>
             </Modal.Body> 

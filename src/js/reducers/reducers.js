@@ -3,6 +3,7 @@ import update from 'immutability-helper';
 
 const appState = {
   showLogin: false,
+  showForgotPassword: false,
   showRegister: false,
   showContact: false,
   showContactSuccess: false,
@@ -17,6 +18,13 @@ export const simCareerReducer = (state=appState, action) => {
   if (action.type === actions.TOGGLE_LOGIN_MODAL) {
     let showLogin = state.showLogin;
     const newAppState = update(state, {showLogin: {$set: !showLogin}});
+    return newAppState;
+  }
+
+  // Forgot Password Modal
+  if (action.type === actions.TOGGLE_FORGOT_PASSWORD_MODAL) {
+    let showForgotPassword = state.showForgotPassword;
+    const newAppState = update(state, {showForgotPassword: {$set: !showForgotPassword}});
     return newAppState;
   }
 

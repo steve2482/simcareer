@@ -4,6 +4,12 @@ export const toggleLoginModal = () => ({
   type : TOGGLE_LOGIN_MODAL
 });
 
+// Toggle Login Modal
+export const TOGGLE_FORGOT_PASSWORD_MODAL = 'TOGGLE_FORGOT_PASSWORD_MODAL';
+export const toggleForgotPasswordModal = () => ({
+  type : TOGGLE_FORGOT_PASSWORD_MODAL
+});
+
 // Toggle Register Modal
 export const TOGGLE_REGISTER_MODAL = 'TOGGLE_REGISTER_MODAL';
 export const toggleRegisterModal = () => ({
@@ -157,6 +163,30 @@ export const userLogout = history => dispatch => {
   .then(() => {
     dispatch(enterUserState(null));
     history.push('/');
+  })
+  .catch(error => console.log(error));
+}
+
+// Reset Password
+export const resetPassword = userInfo => dispatch => {
+  const url = process.env.REACT_APP_ROOT_URL + '/reset-password';
+  const payload = JSON.stringify(userInfo);
+  const request = new Request(url , {
+    method: 'POST',
+    body: payload,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: 'include'
+  });
+  return fetch(request)
+  .then(response => {
+    if (!response.ok) {
+      const error = new Error('Something went wrong while trying to reset user password');
+      console.log(error);
+      dispatch(setErrors(response));
+      dispatch(toggleForgotPasswordModal());
+    }
   })
   .catch(error => console.log(error));
 }
