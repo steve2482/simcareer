@@ -140,6 +140,28 @@ export const userLogIn = (user, history) => dispatch => {
   .catch(error => console.log(error));
 }
 
+// User Logout
+export const userLogout = history => dispatch => {
+  const url = process.env.REACT_APP_ROOT_URL + '/logout';
+  const request = new Request(url, {
+    method: 'GET'
+  });
+  return fetch(request)
+  .then(response => {
+    if (!response.ok) {
+      const error = new Error('Somthing went wrong during user logout');
+      console.log(error);
+    }
+    return response;
+  })
+  .then(() => {
+    dispatch(enterUserState(null));
+    history.push('/');
+  })
+  .catch(error => console.log(error));
+}
+
+
 // Toggle Contact Sucess Modal
 export const TOGGLE_CONTACT_SUCCESS_MODAL = 'TOGGLE_CONTACT_SUCCESS_MODAL';
 export const toggleContactSuccessModal = () => ({

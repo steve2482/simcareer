@@ -23,6 +23,7 @@ export class Navigation extends React.Component {
     this.validateNewMemberId = this.validateNewMemberId.bind(this);
     this.userLogIn = this.userLogIn.bind(this);
     this.submitContactForm = this.submitContactForm.bind(this);
+    this.userLogout = this.userLogout.bind(this);
   }
 
   toggleLoginModal() {
@@ -85,6 +86,12 @@ export class Navigation extends React.Component {
     };
     this.props.dispatch(
       actions.userLogIn(user, this.props.history));
+  }
+
+  userLogout(e) {
+    e.preventDefault();
+    this.props.dispatch(
+      actions.userLogout(this.props.history));
   }
 
   submitContactForm(e) {
@@ -150,7 +157,7 @@ export class Navigation extends React.Component {
               <NavItem><Link to={`/${user.userName}/contracts`}><Glyphicon glyph='briefcase' /> Contracts</Link></NavItem>
               <NavItem><Link to={`/${user.userName}/career-stats`}><Glyphicon glyph='stats' /> Career Stats</Link></NavItem>
               <NavItem><Link to={`/${user.userName}/all-time-stats`}><FaArchive /> All time Stats</Link></NavItem>
-              <NavItem><Glyphicon glyph='log-out' /> Logout</NavItem>
+              <NavItem onClick={this.userLogout}><Glyphicon glyph='log-out' /> Logout</NavItem>
               <NavItem onClick={this.toggleContactModal}><Glyphicon glyph='envelope' /> Contact </NavItem>
             </Nav>
           </Navbar.Collapse>
