@@ -107,8 +107,7 @@ app.post('/validate-memberId', (req, res) => {
 // Reset Password====================================================
 // ==================================================================
 app.post('/reset-password', function(req, res) {
-  return User.getUserByUsername(req.body.userName)
-  .then(user => {
+  return User.getUserByUsername(req.body.userName, function(err, user) {
     if (!user) {
       const error = 'We\'re sorry, the username you entered is not in our records';
       res.status(400).json(error);
@@ -121,8 +120,8 @@ app.post('/reset-password', function(req, res) {
         const error = 'Incorrect answer to secret question'
         res.status(400).json(error);
       }
-    })
-    user.password = User.hashNewPassword(req.body.newPassword);
+    });
+    User.hashNewPassword(user, req.body.newPassword);
   });
 });
 

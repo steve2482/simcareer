@@ -99,12 +99,13 @@ export class Navigation extends React.Component {
   resetPassword(e) {
     e.preventDefault();
     const userInfo = {
-      userName: this.userName.value,
+      userName: this.currentUserName.value,
       answer: this.answer.value,
       newPassword: this.newPassword.value
     };
     this.props.dispatch(
       actions.resetPassword(userInfo));
+    this.toggleForgotPasswordModal();
   }
 
   userLogIn(e) {
@@ -281,7 +282,7 @@ export class Navigation extends React.Component {
             <Modal.Body>
               <form onSubmit={this.resetPassword}>
                 <FormGroup controlId="formBasicText">
-                  <FormControl type="text" inputRef={input => this.userName = input} placeholder="Username" required />
+                  <FormControl type="text" inputRef={input => this.currentUserName = input} placeholder="Username" required />
                 </FormGroup>
                 <FormGroup controlId="formBasicText">
                   <FormControl type="text" inputRef={input => this.answer = input} placeholder="Secret Question: What is your favorite race car?" required />
@@ -293,6 +294,7 @@ export class Navigation extends React.Component {
                   <FormControl type="password" inputRef={input => this.password2 = input} placeholder="Confirm New Password" required onChange={this.validateResetPassword} />
                 </FormGroup>
                 {passwordErrorMsg}
+                {errors}
                 <Button type='submit'>Reset Password</Button>
               </form>
             </Modal.Body> 

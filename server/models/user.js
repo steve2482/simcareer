@@ -17,18 +17,22 @@ module.exports.createUser = function(newUser, callback) {
   bcrypt.genSalt(10, function(err, salt) {
     bcrypt.hash(newUser.password, salt, function(err, hash) {
       newUser.password = hash;
+      newUser.save()
     });
     bcrypt.hash(newUser.secretAnswer, salt, function(err, hash) {
       newUser.secretAnswer = hash;
+      newUser.save()
     });
+    console.log(newUser);
     newUser.save(callback);
   });
 };
 
-module.exports.hashNewPassword = function(newPassword) {
+module.exports.hashNewPassword = function(user, newPassword) {
   bcrypt.genSalt(10, function(err, salt) {
     bcrypt.hash(newPassword, salt, function(err, hash) {
-      return hash;
+      user.password = hash;
+      user.save()
     });
   });
 };
