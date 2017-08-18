@@ -8,7 +8,8 @@ const UserSchema = mongoose.Schema({
   memberId: Number,
   userName: String,
   password: String,
-  secretAnswer: String
+  secretAnswer: String,
+  path: String
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);

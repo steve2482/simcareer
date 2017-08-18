@@ -213,7 +213,6 @@ export const sendSupportTicket = info => dispatch => {
   let emailSent;
   return fetch(request)
   .then(response => {
-    console.log(response);
     if (!response.ok) {
       const error = new Error('Something went wrong while sending support email');
       console.log(error);
@@ -222,8 +221,38 @@ export const sendSupportTicket = info => dispatch => {
         dispatch(setErrors(response));
       });
     } else {
-      console.log('showing contact sucesse modal');
       dispatch(toggleContactSuccessModal());
     }
   })
+}
+
+// Set User Dicipline Selection
+export const diciplineSelection = (user, dicipline) => dispatch => {
+  console.log('selecting dicipline');
+  const url = process.env.REACT_APP_ROOT_URL + '/dicipline-selection';
+  const info = {
+    user: user,
+    dicipline: dicipline
+  };
+  const payload = JSON.stringify(info);
+  const request = new Request(url, {
+    method: 'PUT',
+    body: payload,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: 'include'
+  });
+  return fetch(request)
+  .then(response => {
+    if (!response.ok) {
+      const error = new Error('Something went wrong while setting user dicipline selection');
+        console.log(error);
+    }
+    return response.json();
+  })
+  .then(response => {
+    dispatch(enterUserState(response));
+  })
+  .catch(error => console.log(error));
 }

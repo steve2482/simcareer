@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Col, Grid, Row, Thumbnail } from 'react-bootstrap'
+import { Button, Col, Grid, Row, Thumbnail } from 'react-bootstrap'
+import { Link } from 'react-router-dom';
+import * as actions from '../actions/actions.js';
 import roadImg from '../../assets/images/road-course.jpg';
 import ovalImg from '../../assets/images/oval-course.jpg';
 
@@ -10,6 +12,12 @@ import '../../stylesheets/User-dashboard.css';
 export class UserDashboard extends React.Component {
   constructor(props) {
     super(props);
+    this.diciplineSelection = this.diciplineSelection.bind(this);
+  }
+
+  diciplineSelection(dicipline) {
+    this.props.dispatch(
+      actions.diciplineSelection(this.props.state.user.userName, dicipline));
   }
 
   render() {
@@ -27,11 +35,13 @@ export class UserDashboard extends React.Component {
                 <Col md={6}>
                   <Thumbnail src={ovalImg} alt='Oval'>
                     <h3>Oval</h3>
+                    <Button bsStyle='primary' onClick={() => {this.diciplineSelection('oval')}}>Select</Button>
                   </Thumbnail>
                 </Col>
                 <Col md={6}>
                   <Thumbnail src={roadImg} alt='Oval'>
                     <h3>Road</h3>
+                    <Button bsStyle='primary' onClick={() => {this.diciplineSelection('road')}}>Select</Button>
                   </Thumbnail>
                 </Col>
               </Row>
@@ -39,8 +49,16 @@ export class UserDashboard extends React.Component {
           </div>
         </div> 
       );    
+    } 
+    if (!user.currentContract) {
+      return (
+        <div>
+          <h1>This is the User Dashboard</h1>
+          <p>It looks like you need to select a contract to drive. Head over to the contracts page and see who is offering you a ride.</p>
+        </div>
+      );
     } else {
-      return(
+      return (
         <h1>This is the User Dashboard</h1>
       );
     }
