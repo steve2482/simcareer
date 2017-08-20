@@ -9,7 +9,10 @@ const UserSchema = mongoose.Schema({
   userName: String,
   password: String,
   secretAnswer: String,
-  path: String
+  path: String,
+  tier: Number,
+  currentCar: String,
+  currentSeries: String
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);

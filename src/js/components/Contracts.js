@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Col, Grid, Panel, Row, Thumbnail } from 'react-bootstrap';
+import * as actions from '../actions/actions.js';
 
 import mazdaMx5Img from '../../assets/images/2016mazda-mx5.jpg';
 import specFordImg from '../../assets/images/spec-ford.jpg';
@@ -9,6 +10,12 @@ import solsticeImg from '../../assets/images/pontiac-solstice.jpg';
 export class Contracts extends React.Component {
   constructor(props) {
     super(props);
+    this.contractSelection = this.contractSelection.bind(this);
+  }
+
+  contractSelection(car, series) {
+    this.props.dispatch(
+      actions.contractSelection(this.props.state.user.userName, car, series));
   }
 
   render() {
@@ -24,7 +31,7 @@ export class Contracts extends React.Component {
     );
 
     // If user is road racing and needs to select thier first contract
-    if (user.path === 'road' && !user.currentCar && !user.currentTier) {
+    if (user.path === 'road' && !user.currentCar) {
       return (
         <div className='center'>
           <div>
@@ -45,7 +52,7 @@ export class Contracts extends React.Component {
                       <Panel header={pathHeader} bsStyle='primary'>
                         <p>From the Global Mazda MX-5 Cup Series you can progress on to open wheel formula style cars or to 'tin top' sports cars.</p>
                       </Panel>
-                      <Button bsStyle='primary'>Select</Button>
+                      <Button bsStyle='primary' onClick={() => {this.contractSelection('Global Mazda MX-5 Cup', 'Global Mazda MX-5 Cup Series')}}>Select</Button>
                     </Thumbnail>
                   </Col>
                   <Col md={3}>
@@ -59,7 +66,7 @@ export class Contracts extends React.Component {
                       <Panel header={pathHeader} bsStyle='primary'>
                         <p>From the Spec Racer For Challenge you can progress on to 'tin top' sports cars.</p>
                       </Panel>
-                      <Button bsStyle='primary'>Select</Button>
+                      <Button bsStyle='primary' onClick={() => {this.contractSelection('Spec Racer Ford', 'Spec Racer Ford Challenge')}}>Select</Button>
                     </Thumbnail>
                   </Col>
                   <Col md={3}>
@@ -73,7 +80,7 @@ export class Contracts extends React.Component {
                       <Panel header={pathHeader} bsStyle='primary'>
                         <p>From the Production Car Challenge you can progress on 'tin top' sports cars.</p>
                       </Panel>
-                      <Button bsStyle='primary'>Select</Button>
+                      <Button bsStyle='primary' onClick={() => {this.contractSelection('Pontiac Solstice', 'Production Car Challenge')}}>Select</Button>
                     </Thumbnail>
                   </Col>
                   <Col md={3}>
@@ -87,7 +94,7 @@ export class Contracts extends React.Component {
                       <Panel header={pathHeader} bsStyle='primary'>
                         <p>From the Production Car Challenge you can progress on 'tin top' sports cars.</p>
                       </Panel>
-                      <Button bsStyle='primary'>Select</Button>
+                      <Button bsStyle='primary' onClick={() => {this.contractSelection('Global Mazda MX-5 Cup', 'Production Car Challenge')}}>Select</Button>
                     </Thumbnail>
                   </Col>
                 </Row>

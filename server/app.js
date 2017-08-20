@@ -218,12 +218,12 @@ app.post('/contact', function(req, res) {
 app.put('/dicipline-selection', function(req, res) {
   let userName = req.body.user;
   let dicipline = req.body.dicipline;
-  console.log(dicipline);
   return User.findOneAndUpdate(
     {userName: userName},
     {$set: 
       {
-        path: dicipline
+        path: dicipline,
+        tier: 1
       }
     },
     {upsert: true, new: true},
@@ -232,6 +232,28 @@ app.put('/dicipline-selection', function(req, res) {
         console.log('Path Selection failed');
       }
       console.log(doc);
+      res.status(200).json(doc);
+    }
+  );
+});
+
+app.put('/contract-selection', function(req, res) {
+  let userName = req.body.user;
+  let car = req.body.car;
+  let series = req.body.series;
+  return User.findOneAndUpdate(
+    {userName: userName},
+    {$set:
+      {
+        currentCar: car,
+        currentSeries: series
+      }
+    },
+    {upsert: true, new: true},
+    function(err, doc) {
+      if (err) {
+        console.log('Contract selection failed');
+      }
       res.status(200).json(doc);
     }
   );

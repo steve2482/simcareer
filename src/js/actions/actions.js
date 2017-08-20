@@ -228,7 +228,6 @@ export const sendSupportTicket = info => dispatch => {
 
 // Set User Dicipline Selection
 export const diciplineSelection = (user, dicipline) => dispatch => {
-  console.log('selecting dicipline');
   const url = process.env.REACT_APP_ROOT_URL + '/dicipline-selection';
   const info = {
     user: user,
@@ -250,6 +249,37 @@ export const diciplineSelection = (user, dicipline) => dispatch => {
         console.log(error);
     }
     return response.json();
+  })
+  .then(response => {
+    dispatch(enterUserState(response));
+  })
+  .catch(error => console.log(error));
+}
+
+// Set User Contract Selection
+export const contractSelection = (user, car, series) => dispatch => {
+  const url = process.env.REACT_APP_ROOT_URL + '/contract-selection'
+  const info = {
+    user: user,
+    car: car,
+    series: series
+  };
+  const payload = JSON.stringify(info);
+  const request = new Request(url, {
+    method: 'PUT',
+    body: payload,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: 'include'
+  });
+  return fetch(request)
+  .then(response => {
+    if (!response.ok) {
+      const error = new Error('Something went wrong while setting user contract selection');
+      console.log(error);
+    }
+    return response.json()
   })
   .then(response => {
     dispatch(enterUserState(response));
