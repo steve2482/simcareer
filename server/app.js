@@ -215,6 +215,8 @@ app.post('/contact', function(req, res) {
   });
 });
 
+// Update User Dicipline Selection===================================
+// ==================================================================
 app.put('/dicipline-selection', function(req, res) {
   let userName = req.body.user;
   let dicipline = req.body.dicipline;
@@ -237,6 +239,8 @@ app.put('/dicipline-selection', function(req, res) {
   );
 });
 
+// Update User Contract Selection====================================
+// ==================================================================
 app.put('/contract-selection', function(req, res) {
   let userName = req.body.user;
   let car = req.body.car;
@@ -258,5 +262,11 @@ app.put('/contract-selection', function(req, res) {
     }
   );
 });
+
+// ==================================================================
+// ==================================================================
+// Scrape testing
+// Will eventually be code to scrape iracing for new results of each
+// user
 
 module.exports = app;
