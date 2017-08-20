@@ -6,6 +6,9 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const transporter = require('./nodemailer-config.js');
+const request = require('request');
+const cheerio = require('cheerio');
+const fs = require('fs');
 
 // Models
 const User = require('./models/user.js');
@@ -268,5 +271,23 @@ app.put('/contract-selection', function(req, res) {
 // Scrape testing
 // Will eventually be code to scrape iracing for new results of each
 // user
+
+let username = 'stevecb12684@yahoo.com';
+let password = 'nascar';
+let userStatsUrl = 'http://' + username + ':' + password + 'members.iracing.com/membersite/member/CareerStats.do?custid=51079';
+
+request({url: userStatsUrl}, function(err, res, body) {
+  if (err) {
+    console.log(err);
+  }
+  // if (res) {
+  //   console.log(res.body);
+  // }
+  let $ = cheerio.load(body);
+  let tableTitle = $('.career_title');
+  let tableTitleText = tableTitle.text();
+  console.log('hello');
+  console.log(tableTitleText);
+});
 
 module.exports = app;

@@ -50,7 +50,7 @@ export class UserDashboard extends React.Component {
         </div> 
       );    
     } 
-    if (!user.currentContract) {
+    if (!user.currentCar) {
       return (
         <div>
           <h1>This is the User Dashboard</h1>
