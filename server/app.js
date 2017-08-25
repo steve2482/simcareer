@@ -6,7 +6,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const transporter = require('./nodemailer-config.js');
-const request = require('request');
+let request = require('request');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
@@ -272,22 +272,40 @@ app.put('/contract-selection', function(req, res) {
 // Will eventually be code to scrape iracing for new results of each
 // user
 
-let username = 'stevecb12684@yahoo.com';
-let password = 'nascar';
-let userStatsUrl = 'http://' + username + ':' + password + 'members.iracing.com/membersite/member/CareerStats.do?custid=51079';
+// const credentials = {
+//   username: 'stevecb12684@yahoo.com',
+//   password: 'nascar'
+// };
+// let loginUrl = 'https://members.iracing.com/membersite/login.jsp'
+// let userStatsUrl = 'http://members.iracing.com/membersite/member/CareerStats.do?custid=51079';
 
-request({url: userStatsUrl}, function(err, res, body) {
-  if (err) {
-    console.log(err);
-  }
-  // if (res) {
-  //   console.log(res.body);
-  // }
-  let $ = cheerio.load(body);
-  let tableTitle = $('.career_title');
-  let tableTitleText = tableTitle.text();
-  console.log('hello');
-  console.log(tableTitleText);
-});
+// request.post({
+//   uri: loginUrl,
+//   headers: {
+//     "Content-Type": "application/x-www-form-urlencoded"
+//   },
+//   body: require('querystring').stringify(credentials)
+// },
+// function(err, res, body) {
+//   console.log(body);
+//   if (err) {
+//     callback.call(null, new Error('Login failed'));
+//     return;
+//   }
+//   request(userStatsUrl, function(err, res, body) {
+//     if (err) {
+//       callback.call(null, new Error('Request failed'));
+//       return;
+//     }
+//     let $ = cheerio.load(body);
+//     let text = $('.career_title')
+//     let textText = text.text();
+//     console.log(textText);
+//   })
+// })
+
+  
+  
+
 
 module.exports = app;
