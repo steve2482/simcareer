@@ -272,37 +272,47 @@ app.put('/contract-selection', function(req, res) {
 // Will eventually be code to scrape iracing for new results of each
 // user
 
-// const credentials = {
-//   username: 'stevecb12684@yahoo.com',
-//   password: 'nascar'
-// };
-// let loginUrl = 'https://members.iracing.com/membersite/login.jsp'
-// let userStatsUrl = 'http://members.iracing.com/membersite/member/CareerStats.do?custid=51079';
 
-// request.post({
-//   uri: loginUrl,
-//   headers: {
-//     "Content-Type": "application/x-www-form-urlencoded"
-//   },
-//   body: require('querystring').stringify(credentials)
-// },
-// function(err, res, body) {
-//   console.log(body);
-//   if (err) {
-//     callback.call(null, new Error('Login failed'));
-//     return;
-//   }
-//   request(userStatsUrl, function(err, res, body) {
-//     if (err) {
-//       callback.call(null, new Error('Request failed'));
-//       return;
-//     }
-//     let $ = cheerio.load(body);
-//     let text = $('.career_title')
-//     let textText = text.text();
-//     console.log(textText);
-//   })
-// })
+let username = process.env.REACT_APP_IRACING_USERNAME;
+let password = process.env.REACT_APP_IRACING_PASSWORD;
+
+let loginUrl = 'https://members.iracing.com/membersite/Login'
+
+let jar = request.jar();
+request = request.defaults({jar:jar});
+
+User.find()
+.then(users => {
+  users.forEach(user => {
+    request({
+      uri: loginUrl,
+      method: 'POST',
+      form: {
+        username: username,
+        password: password
+      },
+      jar: jar
+    }, function() {
+      let userStatsUrl = `http://members.iracing.com/memberstats/member/GetLastRacesStats?custid=${user.memberId}`;
+      request({
+        uri: userStatsUrl,
+        method: 'GET',
+        jar: jar
+      }, function(err, res, body) {
+        races = JSON.parse(body);
+        for (i =0; i < races.length; i++) {
+          if (races[i].seriesID === 139) {
+            console.log(true);
+          } else {
+            console.log(false);
+          }
+        }
+      });
+    });
+  });
+});
+
+
 
   
   

@@ -6,7 +6,6 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",
-    "cheerio": "^1.0.0-rc.2",
     "express": "^4.15.3",
     "express-session": "^1.15.5",
     "immutability-helper": "^2.3.0",
@@ -23,8 +22,7 @@
     "react-router-dom": "^4.1.2",
     "react-scripts": "1.0.10",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0",
-    "request": "^2.81.0"
+    "redux-thunk": "^2.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
