@@ -277,8 +277,8 @@ app.put('/contract-selection', function(req, res) {
 });
 
 // ==================================================================
+// Get Race Results==================================================
 // ==================================================================
-// Get Race Results
 
 const steward = require('./points-structure.js');
 
