@@ -257,12 +257,14 @@ export const diciplineSelection = (user, dicipline) => dispatch => {
 }
 
 // Set User Contract Selection
-export const contractSelection = (user, car, series) => dispatch => {
+export const contractSelection = (user, car, carId, series, seriesId) => dispatch => {
   const url = process.env.REACT_APP_ROOT_URL + '/contract-selection'
   const info = {
     user: user,
     car: car,
-    series: series
+    carId: carId,
+    series: series,
+    seriesId: seriesId
   };
   const payload = JSON.stringify(info);
   const request = new Request(url, {

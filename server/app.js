@@ -52,6 +52,10 @@ app.post('/register', (req, res) => {
   let userName = req.body.userName;
   let password = req.body.password;
   let secretAnswer = req.body.secretAnswer;
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
   let newUser = new User({
     name: name,
     email: email,
@@ -59,6 +63,7 @@ app.post('/register', (req, res) => {
     userName: userName,
     password: password,
     secretAnswer: secretAnswer,
+    dateJoined: year + '-' + month + '-' + day
   });
 
   User.createUser(newUser, function(err, user) {          
@@ -245,15 +250,20 @@ app.put('/dicipline-selection', function(req, res) {
 // Update User Contract Selection====================================
 // ==================================================================
 app.put('/contract-selection', function(req, res) {
+  console.log(req.body);
   let userName = req.body.user;
   let car = req.body.car;
+  let carId = req.body.carId;
   let series = req.body.series;
+  let seriesId = req.body.seriesId;
   return User.findOneAndUpdate(
     {userName: userName},
     {$set:
       {
         currentCar: car,
-        currentSeries: series
+        currentCarId: carId,
+        currentSeries: series,
+        currentSeriesId: seriesId
       }
     },
     {upsert: true, new: true},
@@ -268,10 +278,9 @@ app.put('/contract-selection', function(req, res) {
 
 // ==================================================================
 // ==================================================================
-// Scrape testing
-// Will eventually be code to scrape iracing for new results of each
-// user
+// Get Race Results
 
+const steward = require('./points-structure.js');
 
 let username = process.env.REACT_APP_IRACING_USERNAME;
 let password = process.env.REACT_APP_IRACING_PASSWORD;
@@ -281,8 +290,10 @@ let loginUrl = 'https://members.iracing.com/membersite/Login'
 let jar = request.jar();
 request = request.defaults({jar:jar});
 
+// Find all users
 User.find()
 .then(users => {
+  // For each user, login to iracing
   users.forEach(user => {
     request({
       uri: loginUrl,
@@ -292,19 +303,112 @@ User.find()
         password: password
       },
       jar: jar
-    }, function() {
+    }, 
+    function() {
+      // Get users last 10 races
       let userStatsUrl = `http://members.iracing.com/memberstats/member/GetLastRacesStats?custid=${user.memberId}`;
       request({
         uri: userStatsUrl,
         method: 'GET',
         jar: jar
-      }, function(err, res, body) {
-        races = JSON.parse(body);
+      }, 
+      function(err, res, body) {
+        let races = JSON.parse(body);
+        races = races.reverse();
+        // Check if user's last 10 races are of the user's current series, current car, after the date joined and the session id has not been entered already
         for (i =0; i < races.length; i++) {
-          if (races[i].seriesID === 139) {
+          if (races[i].seriesID === user.currentSeriesId && races[i].carID === user.currentCarId && races[i].date <= user.dateJoined && (user.sessionIds === undefined || user.sessionIds.includes(races[i].subsessionID) === false)) {
             console.log(true);
+            // Request session results
+            let resultsUrl = `http://members.iracing.com/membersite/member/GetSubsessionResults?subsessionID=${races[i].subsessionID}&custid=${user.memberId}`;
+            request({
+              uri: resultsUrl,
+              method: 'GET',
+              jar: jar
+            }, 
+            function(err, res, body) {
+              let raceResult = JSON.parse(body);
+              // If session was unofficial or is the same track as last race result(to keep users from running multiple races on tracks they are dominate) do nothing
+              if (raceResult.rows[0].officialsession != 1 || raceResult.track_name === user.lastTrack) {
+                return
+              } else {
+                // Grab session Id and add to users sessionIds
+                let sessionId = raceResult.subsessionid;
+                // Grab Track info and update users lastTrack
+                let trackName = raceResult.track_name;
+                User.findOneAndUpdate(
+                  {userName: user.userName},
+                  {$push: {sessionIds: sessionId}},
+                  {upsert: true, new: true},
+                  function(err) {
+                    if (err) {
+                      console.log(err);
+                    }
+                  }
+                );
+                User.findOneAndUpdate(
+                  {userName: user.userName},
+                  {$set: {lastTrack: trackName}},
+                  {upsert: true, new: true},
+                  function(err) {
+                    if (err) {
+                      console.log(err);
+                    }
+                  }
+                );
+                // Create array of race rows
+                let results = [];
+                for (row = 0; row < raceResult.rows.length; row++) {
+                  if (raceResult.rows[row].simsestypename === 'Race') {
+                    results.push(raceResult.rows[row]);
+                  }
+                }
+                // Grab User result
+                let userInfo = results[(results.findIndex(function(driver) {
+                  return driver.custid === user.memberId;
+                }))];
+                let finalResult = [];
+                let userResult = {
+                  name: user.name,
+                  startPos: userInfo.startpos + 1,
+                  finishPos: userInfo.finishposinclass + 1,
+                  resultLink: `http://members.iracing.com/membersite/member/EventResult.do?&subsessionid=${sessionId}&custid=${user.memberId}`
+                };
+                finalResult.push(userResult);
+                // Remove user and drivers not in same class as user from results array
+                let resultsNoUser = results.filter(function(driver) {
+                  return driver.custid != user.memberId && driver.carid === user.currentCarId;
+                });
+                // Order drivers by irating
+                resultsNoUser = resultsNoUser.sort(function(a, b) {
+                  return b.oldirating - a.oldirating;
+                });
+                // Grab result all racers in class of user
+                for (d = 0; d < resultsNoUser.length; d++) {
+                  let driver = {
+                    name: 'Driver #' + (d + 1),
+                    startPos: resultsNoUser[d].startpos + 1,
+                    finishPos: resultsNoUser[d].finishposinclass + 1,
+                  }
+                  finalResult.push(driver);
+                }
+                finalResult = steward.assignPoints(finalResult, user.currentSeriesId);                  
+                // Save results
+                User.findOneAndUpdate(
+                  {userName: user.userName},
+                  {$push: {seasonResults: finalResult}},
+                  {upsert: true, new: true},
+                  function(err) {
+                    if (err) {
+                      console.log(err);
+                    }
+                  }
+                );
+              }
+            })
           } else {
             console.log(false);
+            // Do nothing
           }
         }
       });

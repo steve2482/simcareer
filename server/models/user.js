@@ -9,10 +9,16 @@ const UserSchema = mongoose.Schema({
   userName: String,
   password: String,
   secretAnswer: String,
+  dateJoined: String,
   path: String,
   tier: Number,
   currentCar: String,
-  currentSeries: String
+  currentCarId: Number,
+  currentSeries: String,
+  currentSeriesId: Number,
+  sessionIds: Array,
+  lastTrack: String,
+  seasonResults: Array
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);
