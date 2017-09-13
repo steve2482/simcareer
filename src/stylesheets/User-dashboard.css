@@ -2,3 +2,19 @@
   width: 1150px;
   margin: auto;
 }
+
+.dashboard {
+  padding-top: 50px;
+}
+
+.dashboard-grid {
+  width: 1110px;
+}
+
+.left {
+  text-align: left;
+}
+
+.overview {
+  height: 425px;
+}

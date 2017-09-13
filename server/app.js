@@ -63,7 +63,8 @@ app.post('/register', (req, res) => {
     userName: userName,
     password: password,
     secretAnswer: secretAnswer,
-    dateJoined: year + '-' + month + '-' + day
+    dateJoined: year + '-' + month + '-' + day,
+    seasonNumber: 1
   });
 
   User.createUser(newUser, function(err, user) {          
@@ -404,11 +405,59 @@ User.find()
                     }
                   }
                 );
+                // Determine points standings
+                User.findOne({userName: user.userName})
+                .then(user => {
+                  // Find largest field
+                  let lengths = user.seasonResults.map(function(a){return a.length;});
+                  let largestFieldIndex = lengths.indexOf(Math.max.apply(Math, lengths));
+                  let largestField = user.seasonResults[largestFieldIndex];
+                  // Create an empty set of standings
+                  let newSeasonStaindings = [];
+                  // Push each driver name into new standings
+                  for (let i = 0; i < largestField.length; i++) {
+                    let eachDriver = {
+                      name: largestField[i].name,
+                      totalPoints: '',
+                      averageStart: '',
+                      averageFinish: ''
+                    }
+                    newSeasonStaindings.push(eachDriver);
+                  }
+                  // Total the points for each driver
+                  for (let i = 0; i < newSeasonStaindings.length; i++) {
+                    let currentDriver = newSeasonStaindings[i];
+                    let pointTotal = 0;
+                    for (let x = 0; x < user.seasonResults.length; x++) {
+                      let eachRaceResult = user.seasonResults[x];
+                      for (let y = 0; y < eachRaceResult.length; y++) {
+                        if (currentDriver.name === eachRaceResult[y].name) {
+                          pointTotal = pointTotal + eachRaceResult[y].points;
+                        }
+                      }
+                    }
+                    currentDriver.totalPoints = pointTotal;
+                  }
+                  return newSeasonStaindings;
+                })
+                .then(standings => {
+                  // Save the updated standings to user
+                  User.findOneAndUpdate(
+                    {userName: user.userName},
+                    {$set: {seasonStandings: standings}},
+                    {upsert: true, new: true},
+                    function(err) {
+                      if (err) {
+                        console.log(err);
+                      }
+                    }
+                  );
+                });
               }
-            })
+            });
           } else {
             console.log(false);
-            // Do nothing
+            // Do nothing         
           }
         }
       });

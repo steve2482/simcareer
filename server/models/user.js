@@ -18,7 +18,9 @@ const UserSchema = mongoose.Schema({
   currentSeriesId: Number,
   sessionIds: Array,
   lastTrack: String,
-  seasonResults: Array
+  seasonResults: Array,
+  seasonStandings: Array,
+  seasonNumber: Number
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);
